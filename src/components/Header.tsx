@@ -1,19 +1,23 @@
 import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone, MessageCircle, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navLinks = [
-  { label: "Home", href: "#home" },
-  { label: "Services", href: "#services" },
-  { label: "About", href: "#about" },
-  { label: "Testimonials", href: "#testimonials" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/" },
+  { label: "Services", href: "/services" },
+  { label: "About", href: "/about" },
+  { label: "Testimonials", href: "/testimonials" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Legal Precedence", href: "/legal-precedence" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,69 +63,77 @@ const Header = () => {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`sticky top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled
-            ? "bg-background/95 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
-            : "bg-background/80 backdrop-blur-sm"
-        }`}
+        className={`sticky top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
+          ? "bg-background/95 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
+          : "bg-background/80 backdrop-blur-sm"
+          }`}
       >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between py-4">
             {/* Logo */}
-            <motion.a
-              href="#home"
-              className="flex items-center gap-3"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <div className="relative">
-                <div className="w-12 h-12 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center">
-                  <svg
-                    viewBox="0 0 100 80"
-                    className="w-7 h-6 text-primary"
-                    fill="currentColor"
-                  >
-                    <path d="M50 0L10 20v5h80v-5L50 0zM15 30v35h10V30H15zm20 0v35h10V30H35zm20 0v35h10V30H55zm20 0v35h10V30H75zM5 70v10h90V70H5z" />
-                  </svg>
+            <Link to="/" className="flex items-center gap-3">
+              <motion.div
+                className="flex items-center gap-3"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center">
+                    <svg
+                      viewBox="0 0 100 80"
+                      className="w-7 h-6 text-primary"
+                      fill="currentColor"
+                    >
+                      <path d="M50 0L10 20v5h80v-5L50 0zM15 30v35h10V30H15zm20 0v35h10V30H35zm20 0v35h10V30H55zm20 0v35h10V30H75zM5 70v10h90V70H5z" />
+                    </svg>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <h1 className="font-serif text-lg sm:text-xl font-bold text-foreground leading-tight">
-                  Tamil Nadu NRI
-                </h1>
-                <p className="text-xs text-primary tracking-[0.15em] uppercase font-medium">
-                  Legal Services
-                </p>
-              </div>
-            </motion.a>
+                <div>
+                  <h1 className="font-serif text-lg sm:text-xl font-bold text-foreground leading-tight">
+                    Tamil Nadu NRI
+                  </h1>
+                  <p className="text-xs text-primary tracking-[0.15em] uppercase font-medium">
+                    Legal Services
+                  </p>
+                </div>
+              </motion.div>
+            </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-1">
-              {navLinks.map((link, index) => (
-                <motion.a
-                  key={link.label}
-                  href={link.href}
-                  className="relative px-4 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors duration-300 group"
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  {link.label}
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-[60%]" />
-                </motion.a>
-              ))}
+              {navLinks.map((link, index) => {
+                const isActive = location.pathname === link.href;
+                return (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                  >
+                    <motion.div
+                      className={`relative px-4 py-2 text-sm font-medium transition-colors duration-300 group ${isActive ? 'text-primary' : 'text-foreground/70 hover:text-foreground'
+                        }`}
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      {link.label}
+                      <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-primary transition-all duration-300 ${isActive ? 'w-[60%]' : 'w-0 group-hover:w-[60%]'
+                        }`} />
+                    </motion.div>
+                  </Link>
+                );
+              })}
             </nav>
 
             {/* CTA Button */}
             <div className="hidden lg:flex items-center">
               <Button
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 shadow-gold group"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 shadow-blue group"
                 asChild
               >
-                <a href="#contact" className="flex items-center gap-2">
+                <Link to="/contact" className="flex items-center gap-2">
                   Free Consultation
                   <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </a>
+                </Link>
               </Button>
             </div>
 
@@ -150,16 +162,22 @@ const Header = () => {
               className="lg:hidden bg-card border-t border-border/50 overflow-hidden"
             >
               <nav className="container mx-auto px-4 py-6 flex flex-col gap-2">
-                {navLinks.map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    className="text-lg font-medium text-foreground/80 hover:text-primary hover:bg-primary/5 transition-all py-3 px-4 rounded-lg"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {link.label}
-                  </a>
-                ))}
+                {navLinks.map((link) => {
+                  const isActive = location.pathname === link.href;
+                  return (
+                    <Link
+                      key={link.label}
+                      to={link.href}
+                      className={`text-lg font-medium transition-all py-3 px-4 rounded-lg ${isActive
+                        ? 'text-primary bg-primary/5'
+                        : 'text-foreground/80 hover:text-primary hover:bg-primary/5'
+                        }`}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
                 <div className="pt-4 mt-2 border-t border-border/50 space-y-3">
                   <a
                     href="tel:+919994552217"
@@ -177,13 +195,13 @@ const Header = () => {
                     <MessageCircle className="w-5 h-5 text-primary" />
                     <span>WhatsApp Us</span>
                   </a>
-                  <Button 
-                    className="w-full bg-primary text-primary-foreground mt-2" 
+                  <Button
+                    className="w-full bg-primary text-primary-foreground mt-2"
                     asChild
                   >
-                    <a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>
                       Free Consultation
-                    </a>
+                    </Link>
                   </Button>
                 </div>
               </nav>
